@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom';
 import { Component } from 'react/cjs/react.production.min';
+import s from './Modal.module.css';
 
 export class Modal extends Component {
   componentDidMount() {
@@ -18,18 +19,15 @@ export class Modal extends Component {
 
   handleOverlayClick = e => {
     if (e.currentTarget === e.target) {
-      console.log(e.target);
-      console.log(e.currentTarget);
       this.props.onClose();
     }
   };
-  render() {
-    console.log(this.props);
 
+  render() {
     return createPortal(
-      <div className="Overlay" onClick={this.handleOverlayClick}>
-        <div className="Modal">
-          <img src={this.props.link} alt="12" />
+      <div className={s.Overlay} onClick={this.handleOverlayClick}>
+        <div className={s.Modal}>
+          <img src={this.props.link} alt="Big illustration" />
         </div>
       </div>,
       document.body

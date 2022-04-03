@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
+import s from './Searchbar.module.css';
 
 class Searchbar extends Component {
   state = { request: '' };
@@ -12,7 +13,7 @@ class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { request } = this.state;
-    this.props.onSubmit(request);
+    this.props.onSubmit(request.toLowerCase());
     this.reset();
   };
 
@@ -25,24 +26,24 @@ class Searchbar extends Component {
   render() {
     return (
       <>
-        <header className="Searchbar">
-          <form onSubmit={this.handleSubmit} className="SearchForm">
-            <button type="submit" className="SearchForm-button">
-              <span className="button-label"></span>
+        <header className={s.Searchbar}>
+          <form onSubmit={this.handleSubmit} className={s.SearchForm}>
+            <button type="submit" className={s.SearchFormButton}>
+              <span className={s.SearchFormButtonLabel}></span>
             </button>
 
             <label htmlFor={this.nameId}>
               <input
                 type="text"
-                // autoComplete="off"
+                autoComplete="off"
                 name="request"
                 value={this.state.request}
                 onChange={this.handleChange}
                 id={this.nameId}
                 autoFocus
                 placeholder="Search images and photos"
-                className="SearchForm-input"
-                //   required
+                className={s.SearchFormInput}
+                required
               />
             </label>
           </form>
@@ -51,4 +52,5 @@ class Searchbar extends Component {
     );
   }
 }
+
 export default Searchbar;

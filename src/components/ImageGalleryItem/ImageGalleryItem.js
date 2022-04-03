@@ -1,18 +1,22 @@
-// import { Modal } from 'components/Modal';
-
-// export default ImageGalleryItem = element => {
+import s from './ImageGalleryItem.module.css';
+import PropTypes from 'prop-types';
 const ImageGalleryItem = ({
-  item: { webformatURL: webLink, tags, largeImageURL },
+  item: { webformatURL: webLink, tags, largeImageURL: link },
 }) => {
   return (
-    <li className="ImageGalleryItem">
+    <li className={s.ImageGalleryItem}>
       <img
         src={webLink}
         alt={tags}
-        data-tag={largeImageURL}
-        className="ImageGalleryItem-image"
+        data-link={link}
+        className={s.ImageGalleryItemImage}
       />
     </li>
   );
 };
+
+ImageGalleryItem.propTypes = {
+  item: PropTypes.object.isRequired,
+};
+
 export default ImageGalleryItem;

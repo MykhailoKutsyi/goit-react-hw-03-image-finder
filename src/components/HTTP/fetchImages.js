@@ -5,7 +5,7 @@ export default function fetchImages(searchRequest, page) {
     // enteredValue: 'ukraine',
     imageType: 'photo',
     orientation: 'horizontal',
-    perPage: 6,
+    perPage: 12,
   };
   // console.log('page = ', page);
   const url = `https://pixabay.com/api/?key=${options.key}&q=${options.enteredValue}&image_type=${options.imageType}&orientation=${options.orientation}&per_page=${options.perPage}&page=${page}`;
@@ -14,6 +14,6 @@ export default function fetchImages(searchRequest, page) {
     if (response.ok) {
       return response.json();
     }
-    return Promise.reject(new Error(`Error message`));
+    return Promise.reject(`Try to change the request`);
   });
 }
