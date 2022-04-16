@@ -12,9 +12,8 @@ class App extends Component {
     request: '',
     data: [],
     total: 0,
-    page: 0,
+    page: 1,
     status: 'idle',
-    showModal: false,
     link: null,
     error: null,
   };
@@ -26,10 +25,19 @@ class App extends Component {
     const nextPage = this.state.page;
 
     if (prevName !== nextName || prevPage !== nextPage) {
+      this.setState({ status: 'pending' });
       fetchImages(this.state.request, this.state.page)
         .then(newData => {
           return this.setState(({ data }) => ({
-            data: [...data, ...newData.hits],
+            data: [
+              ...data,
+              ...newData.hits.map(item => ({
+                id: item.id,
+                webLink: item.webformatURL,
+                link: item.largeImageURL,
+                tags: item.tags,
+              })),
+            ],
             total: newData.total,
             status: 'resolved',
           }));
@@ -38,55 +46,49 @@ class App extends Component {
     }
   }
 
-  onLoadMoreClick() {
-    this.setState({ status: 'pending' });
+  onLoadMoreClick = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
-  }
+  };
 
   addRequest = newRequest => {
     this.setState({
       data: [],
       request: newRequest,
-      page: 1,
     });
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
-  };
-
-  changeLink = newLink => {
-    this.toggleModal();
+  addLink = newLink => {
     this.setState({
       link: newLink,
     });
   };
 
+  deleteLink = () => {
+    this.setState({ link: null });
+  };
+
   render() {
-    const { status, data, error, total } = this.state;
+    const { status, data, error, total, link } = this.state;
+    const { addRequest, addLink, onLoadMoreClick, deleteLink } = this;
     return (
       <>
-        <Searchbar onSubmit={this.addRequest} />
+        <Searchbar onSubmit={addRequest} />
 
         {status === 'idle' && <></>}
 
-        {data.length > 0 && (
-          <ImageGallery onSubmit={this.changeLink} data={data} />
-        )}
+        {data.length > 0 && <ImageGallery onSubmit={addLink} data={data} />}
 
         {status === 'rejected' && <>{error}</>}
 
         {status === 'resolved' && data.length > 0 && data.length < total && (
-          <Button loadMore={() => this.onLoadMoreClick()} />
+          <Button loadMore={onLoadMoreClick} />
         )}
 
         {status === 'pending' && <Loader />}
 
-        {this.state.showModal && (
-          <Modal onClose={this.toggleModal} link={this.state.link} />
-        )}
+        {link && <Modal onClose={deleteLink} link={link} />}
       </>
     );
   }

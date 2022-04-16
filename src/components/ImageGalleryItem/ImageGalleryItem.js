@@ -1,8 +1,6 @@
 import s from './ImageGalleryItem.module.css';
-import PropTypes from 'prop-types';
-const ImageGalleryItem = ({
-  item: { webformatURL: webLink, tags, largeImageURL: link },
-}) => {
+
+const ImageGalleryItem = ({ item: { webLink, tags, link } }) => {
   return (
     <li className={s.ImageGalleryItem}>
       <img
@@ -13,10 +11,6 @@ const ImageGalleryItem = ({
       />
     </li>
   );
-};
-
-ImageGalleryItem.propTypes = {
-  item: PropTypes.object.isRequired,
 };
 
 export default ImageGalleryItem;
