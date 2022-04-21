@@ -25,8 +25,9 @@ class App extends Component {
     const nextPage = this.state.page;
 
     if (prevName !== nextName || prevPage !== nextPage) {
+      const { request, page } = this.state;
       this.setState({ status: 'pending' });
-      fetchImages(this.state.request, this.state.page)
+      fetchImages(request, page)
         .then(newData => {
           return this.setState(({ data }) => ({
             data: [

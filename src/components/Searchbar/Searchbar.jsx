@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import s from './Searchbar.module.css';
+import PropTypes from 'prop-types';
 
 class Searchbar extends Component {
+  static propTypes = { onSubmit: PropTypes.func.isRequired };
+
   state = { request: '' };
 
   handleChange = e => {
@@ -24,22 +27,24 @@ class Searchbar extends Component {
   nameId = nanoid();
 
   render() {
+    const { request } = this.state;
+    const { nameId, handleChange, handleSubmit } = this;
     return (
       <>
         <header className={s.Searchbar}>
-          <form onSubmit={this.handleSubmit} className={s.SearchForm}>
+          <form onSubmit={handleSubmit} className={s.SearchForm}>
             <button type="submit" className={s.SearchFormButton}>
               <span className={s.SearchFormButtonLabel}></span>
             </button>
 
-            <label htmlFor={this.nameId}>
+            <label htmlFor={nameId}>
               <input
                 type="text"
                 autoComplete="off"
                 name="request"
-                value={this.state.request}
-                onChange={this.handleChange}
-                id={this.nameId}
+                value={request}
+                onChange={handleChange}
+                id={nameId}
                 autoFocus
                 placeholder="Search images and photos"
                 className={s.SearchFormInput}
