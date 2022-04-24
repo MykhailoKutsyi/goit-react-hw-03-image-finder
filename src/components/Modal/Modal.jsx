@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
+const modalRoot = document.getElementById('modal-root');
+
 export class Modal extends Component {
   static propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -38,7 +40,8 @@ export class Modal extends Component {
           <img src={link} alt="Big illustration" />
         </div>
       </div>,
-      document.body
+      modalRoot
+      // document.body
     );
   }
 }
