@@ -7,8 +7,7 @@ import ImageGallery from './components/ImageGallery';
 import { Modal } from './components/Modal';
 import Button from './components/Button';
 import Loader from './components/Loader';
-
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Notification } from './components/Notification';
 
 class App extends Component {
   state = {
@@ -22,7 +21,6 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('componentDidUpdate');
     const prevName = prevState.request;
     const nextName = this.state.request;
     const prevPage = prevState.page;
@@ -78,6 +76,7 @@ class App extends Component {
   render() {
     const { status, data, error, total, link, page } = this.state;
     const { addRequest, addLink, onLoadMoreClick, deleteLink } = this;
+
     return (
       <>
         <Searchbar onSubmit={addRequest} />
@@ -95,23 +94,12 @@ class App extends Component {
 
         {link && <Modal onClose={deleteLink} link={link} />}
 
-        {page === 1 &&
-          status === 'resolved' &&
-          data.length > 0 &&
-          Notify.info(`Hooray! We found ${total} images.`)}
-
-        {status === 'resolved' &&
-          total === 0 &&
-          Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          )}
-
-        {status === 'resolved' &&
-          data.length > 0 &&
-          (data.length > total || data.length === total) &&
-          Notify.warning(
-            "We're sorry, but you've reached the end of search results."
-          )}
+        <Notification
+          status={status}
+          dataLength={data.length}
+          total={total}
+          page={page}
+        />
       </>
     );
   }
