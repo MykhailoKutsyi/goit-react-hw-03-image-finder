@@ -16,11 +16,6 @@ class Searchbar extends Component {
     e.preventDefault();
     const { request } = this.state;
     this.props.onSubmit(request.toLowerCase());
-    this.reset();
-  };
-
-  reset = () => {
-    this.setState({ request: '' });
   };
 
   render() {

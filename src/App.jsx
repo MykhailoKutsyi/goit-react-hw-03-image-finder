@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import Searchbar from './Searchbar';
-import ImageGallery from './ImageGallery';
-import { Modal } from './Modal';
 
-import fetchImages from './HTTP/fetchImages';
-import Button from './Button';
-import Loader from './Loader';
+import fetchImages from './services/fetchImages';
+
+import Searchbar from './components/Searchbar';
+import ImageGallery from './components/ImageGallery';
+import { Modal } from './components/Modal';
+import Button from './components/Button';
+import Loader from './components/Loader';
+
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 class App extends Component {
   state = {
@@ -19,6 +22,7 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate');
     const prevName = prevState.request;
     const nextName = this.state.request;
     const prevPage = prevState.page;
@@ -57,6 +61,7 @@ class App extends Component {
     this.setState({
       data: [],
       request: newRequest,
+      page: 1,
     });
   };
 
@@ -71,7 +76,7 @@ class App extends Component {
   };
 
   render() {
-    const { status, data, error, total, link } = this.state;
+    const { status, data, error, total, link, page } = this.state;
     const { addRequest, addLink, onLoadMoreClick, deleteLink } = this;
     return (
       <>
@@ -82,7 +87,6 @@ class App extends Component {
         {data.length > 0 && <ImageGallery onSubmit={addLink} data={data} />}
 
         {status === 'rejected' && <>{error}</>}
-
         {status === 'resolved' && data.length > 0 && data.length < total && (
           <Button loadMore={onLoadMoreClick} />
         )}
@@ -90,6 +94,24 @@ class App extends Component {
         {status === 'pending' && <Loader />}
 
         {link && <Modal onClose={deleteLink} link={link} />}
+
+        {page === 1 &&
+          status === 'resolved' &&
+          data.length > 0 &&
+          Notify.info(`Hooray! We found ${total} images.`)}
+
+        {status === 'resolved' &&
+          total === 0 &&
+          Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.'
+          )}
+
+        {status === 'resolved' &&
+          data.length > 0 &&
+          (data.length > total || data.length === total) &&
+          Notify.warning(
+            "We're sorry, but you've reached the end of search results."
+          )}
       </>
     );
   }
